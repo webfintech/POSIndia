@@ -1,7 +1,6 @@
 # ==============================================================================
 # .github/workflows/build-apk.yml
 # Automated Android APK Build & Direct Phone Download Link via GitHub Actions
-# Works seamlessly with Google AI Studio Android / Flutter projects
 # ==============================================================================
 
 name: Build & Release Android APK
@@ -9,10 +8,10 @@ name: Build & Release Android APK
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+  workflow_dispatch: # Allows manual run button in Actions tab
 
 permissions:
-  contents: write # Required to publish releases
+  contents: write
 
 jobs:
   build-apk:
@@ -28,7 +27,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
+          # NOTE: Removed cache: 'gradle' to prevent "No file matched to gradle" error
 
       - name: 💙 Setup Flutter SDK
         uses: subosito/flutter-action@v2
@@ -36,6 +35,13 @@ jobs:
           flutter-version: '3.24.x'
           channel: 'stable'
           cache: true
+
+      - name: 📱 Ensure Android Platform Files Exist
+        run: |
+          if [ ! -d "android" ]; then
+            echo "Creating Android platform files and Gradle wrapper..."
+            flutter create . --platforms=android --org=com.posindia
+          fi
 
       - name: 📦 Install Dependencies
         run: flutter pub get
@@ -49,15 +55,21 @@ jobs:
           name: posindia-app-release
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      # Public direct phone download link generate karne ke liye:
       - name: 🚀 Publish Direct Phone Download Link via GitHub Releases
         uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           tag_name: latest
           name: "Latest Android APK Build"
           body: |
-            ## 📱 Direct Android APK Download
+            ## 📱 Direct Android APK Download Ready!
             - **Download Link**: [app-release.apk](https://github.com/${{ github.repository }}/releases/download/latest/app-release.apk)
+            - **Commit**: ${{ github.sha }}
+            
+            ### 📲 Phone Installation:
+            1. Tap the download link in Chrome on your phone.
+            2. If Chrome says *"File might be harmful"*, tap **Download anyway**.
+            3. Tap **Open** -> allow **Install unknown apps** -> tap **Install**!
           files: build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1907,7 +1907,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
       - name: 💙 Setup Flutter SDK
         uses: subosito/flutter-action@v2
@@ -1915,6 +1914,13 @@ jobs:
           flutter-version: '3.24.x'
           channel: 'stable'
           cache: true
+
+      - name: 📱 Ensure Android Platform Files Exist
+        run: |
+          if [ ! -d "android" ]; then
+            echo "Creating Android platform files and Gradle wrapper..."
+            flutter create . --platforms=android --org=com.posindia
+          fi
 
       - name: 📦 Install Dependencies
         run: flutter pub get
