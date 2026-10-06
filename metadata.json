@@ -1,0 +1,6 @@
+{
+  "name": "POSIndia SaaS Billing Terminal & Flutter Architect",
+  "description": "Production-ready Multi-Tenant Cloud POS Billing Screen and Flutter Architecture for posindia.shop with GST calculation, ESC/POS thermal receipts, and real-time payment workflows.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
