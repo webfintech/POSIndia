@@ -1873,4 +1873,70 @@ flutter run -d macos
 \`\`\`
 `,
   },
+  {
+    path: '.github/workflows/build-apk.yml',
+    name: 'build-apk.yml',
+    category: 'config',
+    description: 'Automated GitHub Actions workflow to build release Android APK and generate direct phone download links.',
+    content: `# ==============================================================================
+# FILE: .github/workflows/build-apk.yml
+# PROJECT: POSIndia.shop Android APK CI/CD Pipeline
+# ==============================================================================
+
+name: Build & Release Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Flutter Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 💙 Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: 🔨 Compile Release APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      - name: 📤 Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: posindia-app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: 🚀 Publish Direct Phone Download Link via GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Latest Android APK Build"
+          body: "Direct download link: [app-release.apk](https://github.com/\${{ github.repository }}/releases/download/latest/app-release.apk)"
+          files: build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+`,
+  },
 ];

@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export type ViewportMode = 'desktop' | 'tablet' | 'mobile';
-export type AppTab = 'pos' | 'flutter_code' | 'api_logs';
+export type AppTab = 'pos' | 'flutter_code' | 'apk_guide';
 
 interface POSNavbarProps {
   activeTab: AppTab;
@@ -96,6 +96,21 @@ export const POSNavbar: React.FC<POSNavbarProps> = ({
             <span>Flutter Codebase</span>
             <span className="text-[9px] px-1 py-0.2 bg-blue-500/30 text-blue-300 rounded font-mono">
               lib/
+            </span>
+          </button>
+
+          <button
+            onClick={() => onTabChange('apk_guide')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all ${
+              activeTab === 'apk_guide'
+                ? 'bg-purple-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+            }`}
+          >
+            <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+            <span>APK Download Guide</span>
+            <span className="text-[9px] px-1 py-0.2 bg-emerald-500/30 text-emerald-300 rounded font-bold font-mono">
+              NEW
             </span>
           </button>
         </div>

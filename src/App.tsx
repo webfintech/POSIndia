@@ -14,6 +14,7 @@ import { BarcodeScannerModal } from './components/pos/BarcodeScannerModal';
 import { CustomerModal } from './components/pos/CustomerModal';
 import { ApiLogModal } from './components/pos/ApiLogModal';
 import { FlutterCodeViewer } from './components/code_viewer/FlutterCodeViewer';
+import { ApkDownloadGuide } from './components/apk_guide/ApkDownloadGuide';
 
 import { 
   CartItem, 
@@ -291,6 +292,8 @@ export default function App() {
       {/* Main Body */}
       {activeTab === 'flutter_code' ? (
         <FlutterCodeViewer />
+      ) : activeTab === 'apk_guide' ? (
+        <ApkDownloadGuide />
       ) : (
         /* POS Interactive Terminal Simulator */
         <main className="flex-1 flex justify-center items-stretch overflow-hidden p-0 sm:p-2 bg-slate-950">
